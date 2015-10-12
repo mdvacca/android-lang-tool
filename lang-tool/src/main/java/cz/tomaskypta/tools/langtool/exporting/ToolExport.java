@@ -284,7 +284,7 @@ public class ToolExport {
 
                 cell = row.createCell(1);
                 cell.setCellStyle(textStyle);
-                cell.setCellValue(item.getTextContent().replace("\\'", "'").replace("\\\"", "\""));
+                cell.setCellValue(unEscape(item.getTextContent()));
             } else if ("plurals".equals(item.getNodeName())) {
                 String key = item.getAttributes().getNamedItem("name").getNodeValue();
                 if (mConfig.isIgnoredKey(key)) {
@@ -312,7 +312,7 @@ public class ToolExport {
 
                         itemCell = itemRow.createCell(1);
                         itemCell.setCellStyle(textStyle);
-                        itemCell.setCellValue(plurarItem.getTextContent());
+                        itemCell.setCellValue(unEscape(plurarItem.getTextContent()));
                     }
                 }
             } else if ("string-array".equals(item.getNodeName())) {
@@ -335,7 +335,7 @@ public class ToolExport {
 
                         itemCell = itemRow.createCell(1);
                         itemCell.setCellStyle(textStyle);
-                        itemCell.setCellValue(arrayItem.getTextContent());
+                        itemCell.setCellValue(unEscape(arrayItem.getTextContent()));
                     }
                 }
             }
@@ -347,6 +347,10 @@ public class ToolExport {
 
         out.println("DEFAULT language was precessed");
         return keys;
+    }
+
+    private String unEscape(String text) {
+        return text.replace("\'", "'").replace("\\'", "'").replace("\\\"", "\"");
     }
 
     private void exportLangToExcel(String project, String lang, File src, NodeList strings, File f, Map<String, Integer> keysIndex) throws IOException {
@@ -383,7 +387,7 @@ public class ToolExport {
                 HSSFRow row = sheet.getRow(index);
 
                 HSSFCell cell = row.createCell(lastColumnIdx);
-                cell.setCellValue(item.getTextContent());
+                cell.setCellValue(unEscape(item.getTextContent()));
                 cell.setCellStyle(textStyle);
             } else if ("plurals".equals(item.getNodeName())) {
                 String key = item.getAttributes().getNamedItem("name").getNodeValue();
@@ -404,7 +408,7 @@ public class ToolExport {
                         HSSFRow row = sheet.getRow(index);
 
                         HSSFCell cell = row.createCell(lastColumnIdx);
-                        cell.setCellValue(pluralItem.getTextContent());
+                        cell.setCellValue(unEscape(pluralItem.getTextContent()));
                         cell.setCellStyle(textStyle);
                     }
                 }
@@ -425,7 +429,7 @@ public class ToolExport {
                         HSSFRow itemRow = sheet.getRow(rowIndex);
 
                         HSSFCell cell = itemRow.createCell(lastColumnIdx);
-                        cell.setCellValue(arrayItem.getTextContent());
+                        cell.setCellValue(unEscape(arrayItem.getTextContent()));
                         cell.setCellStyle(textStyle);
                     }
                 }
